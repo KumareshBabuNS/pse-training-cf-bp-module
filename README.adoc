@@ -234,3 +234,79 @@ Application was staged at: 2014-05-27 15:52:41 +0000
 ----
 
 . You did it! Congratulations on completing the lab.
+
+== BONUS: Change JRE Version
+
+In this section you'll update your buildpack to utilize JRE 1.8 rather than 1.7.
+
+. Change +java-buildpack/config/open_jdk_jre.yml+ as shown:
++
+[source,yaml]
+----
+repository_root: "{default.repository.root}/openjdk/{platform}/{architecture}"
+version: 1.8.0_+ # 1.7 becomes 1.8
+memory_sizes:
+  metaspace: 64m.. # permgen becomes metaspace
+memory_heuristics:
+  heap: 85
+  metaspace: 10 # permgen becomes metaspace
+  stack: 5
+  native: 10
+----
+
+. Repackage the buildpack:
++
+[source,bash]
+----
+$ bundle exec rake clean package
+----
+
+. Update your admin buildpack:
++
+[source,bash]
+----
+$ cf update-buildpack java-staging-ts -p build/java-buildpack-158e5a6.zip
+Updating buildpack java-staging-ts...
+OK
+----
+
+. Repush your application, watching the JRE version change:
++
+[source,bash]
+----
+$ ./gradlew cf-push
+:compileJava UP-TO-DATE
+:processResources UP-TO-DATE
+:classes UP-TO-DATE
+:jar
+:bootRepackage
+:assemble
+:cf-push
+Updating application cities
+Uploading /Users/pivotal/workspace/cities/build/libs/cities.jar
+Starting cities
+-----> Downloaded app package (23M)
+-----> Downloaded app buildpack cache (68M)
+-----> Java Buildpack Version: 158e5a6 | https://github.com/cloudfoundry/java-buildpack.git#158e5a6
+-----> Downloading Open Jdk JRE 1.8.0_05 from http://download.run.pivotal.io/openjdk/lucid/x86_64/openjdk-1.8.0_05.tar.gz (found in cache)
+
+# Remainder omitted...
+----
+
+. You can also verify your update by looking again at the staging info:
++
+[source,bash]
+----
+$ cf files cities staging_info.yml
+Getting files for app cities in org mstine-org / space demo as admin...
+OK
+
+---
+buildpack_path: /var/vcap/data/dea_next/admin_buildpacks/e26215b3-1ff9-4e0f-82ee-c7ac2c23d24c_29caed807a9b3294f2acc7bc666c6bafb767cadd
+detected_buildpack: java-buildpack=158e5a6-https://github.com/cloudfoundry/java-buildpack.git#158e5a6
+  java-main open-jdk-jre=1.8.0_05 spring-auto-reconfiguration=1.2.0_RELEASE staging-timestamp
+start_command: SERVER_PORT=$PORT $PWD/.java-buildpack/open_jdk_jre/bin/java -cp $PWD/.:$PWD/.java-buildpack/spring_auto_reconfiguration/spring_auto_reconfiguration-1.2.0_RELEASE.jar
+  -Djava.io.tmpdir=$TMPDIR -XX:OnOutOfMemoryError=$PWD/.java-buildpack/open_jdk_jre/bin/killjava.sh
+  -Xmx389939K -Xms389939K -XX:MaxMetaspaceSize=64M -XX:MetaspaceSize=64M -Xss985K
+  -Dstaging.timestamp='2014-05-27 17:58:04 +0000' org.springframework.boot.loader.JarLauncher
+----
