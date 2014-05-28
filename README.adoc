@@ -136,7 +136,7 @@ OK
 
 . Now it's time to test our changes. We'll add a very basic REST controller to our Cities application that will return the staging timestamp in response to a GET request.
 +
-Create +cities/src/main/java/org/example/cities/StagintController.java+ and add the following code:
+Create +cities/src/main/java/org/example/cities/StagingController.java+ and add the following code:
 +
 [source,java]
 ----
@@ -148,7 +148,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class StagingController {
 
-    @RequestMapping("/")
+    @RequestMapping("/staging")
     public String index() {
         String timestamp = System.getProperty("staging.timestamp");
         return "Application was staged at: " + timestamp;
@@ -160,42 +160,8 @@ Repackage and repush the application:
 +
 [source,bash]
 ----
-$ ./gradlew cf-push
-:compileJava UP-TO-DATE
-:processResources UP-TO-DATE
-:classes UP-TO-DATE
-:jar
-:bootRepackage
-:assemble
-:cf-push
-Updating application cities
-Uploading /Users/pivotal/workspace/cities/build/libs/cities.jar
-Starting cities
------> Downloaded app package (23M)
------> Downloaded app buildpack cache (4.0K)
------> Java Buildpack Version: 158e5a6 | https://github.com/cloudfoundry/java-buildpack.git#158e5a6
------> Downloading Open Jdk JRE 1.7.0_55 from http://download.run.pivotal.io/openjdk/lucid/x86_64/openjdk-1.7.0_55.tar.gz (15.7s)
-       Expanding Open Jdk JRE to .java-buildpack/open_jdk_jre (1.1s)
------> Downloading Spring Auto Reconfiguration 1.2.0_RELEASE from http://download.run.pivotal.io/auto-reconfiguration/auto-reconfiguration-1.2.0_RELEASE.jar (1.1s)
------> Uploading droplet (54M)
-
-Checking status of cities
-  0 of 1 instances running (1 starting)
-  0 of 1 instances running (1 starting)
-  0 of 1 instances running (1 starting)
-  0 of 1 instances running (1 starting)
-  0 of 1 instances running (1 starting)
-  0 of 1 instances running (1 starting)
-  0 of 1 instances running (1 starting)
-  0 of 1 instances running (1 starting)
-  0 of 1 instances running (1 starting)
-  0 of 1 instances running (1 starting)
-  1 of 1 instances running (1 running)
-Application cities is available at http://cities.cf.deepsouthcloud.com
-
-BUILD SUCCESSFUL
-
-Total time: 2 mins 10.684 secs
+$ gradle assemble
+$ cf push
 ----
 
 . Now let's check the staging info provided by the Java buildpack to see that our change was effective:
@@ -222,7 +188,7 @@ As you can see from the output, our timestamp was added as the final +-D+ argume
 +
 [source,bash]
 ----
-$ curl -i http://cities.cf.deepsouthcloud.com
+$ curl -i http://cities.cf.deepsouthcloud.com/staging
 HTTP/1.1 200 OK
 Content-Length: 52
 Content-Type: text/plain;charset=ISO-8859-1
@@ -274,22 +240,28 @@ OK
 +
 [source,bash]
 ----
-$ ./gradlew cf-push
-:compileJava UP-TO-DATE
-:processResources UP-TO-DATE
-:classes UP-TO-DATE
-:jar
-:bootRepackage
-:assemble
-:cf-push
-Updating application cities
-Uploading /Users/pivotal/workspace/cities/build/libs/cities.jar
-Starting cities
+$ cf push
+Using manifest file /Users/pivotal/workspace/pse-training/pse-hw-module/code/manifest.yml
+
+Updating app cities in org mstine-org / space demo as admin...
+OK
+
+Uploading cities...
+Uploading app files from: /Users/pivotal/workspace/pse-training/pse-hw-module/code/build/libs/cities-0.0.1-SNAPSHOT.jar
+Uploading 735.9K, 95 files
+OK
+Binding service cities-db to app cities in org mstine-org / space demo as admin...
+OK
+
+Stopping app cities in org mstine-org / space demo as admin...
+OK
+
+Starting app cities in org mstine-org / space demo as admin...
+OK
 -----> Downloaded app package (23M)
------> Downloaded app buildpack cache (68M)
+-----> Downloaded app buildpack cache (38M)
 -----> Java Buildpack Version: 158e5a6 | https://github.com/cloudfoundry/java-buildpack.git#158e5a6
 -----> Downloading Open Jdk JRE 1.8.0_05 from http://download.run.pivotal.io/openjdk/lucid/x86_64/openjdk-1.8.0_05.tar.gz (found in cache)
-
 # Remainder omitted...
 ----
 
