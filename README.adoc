@@ -73,7 +73,7 @@ frameworks:
 [source,bash]
 ----
 $ bundle install
-$ bundle exec rake package
+$ bundle exec rake package OFFLINE=true
 ----
 +
 Toward the end of the output, you should see something like the following, which indicates where your buildpack package as been created:
@@ -156,7 +156,7 @@ public class StagingController {
 }
 ----
 +
-Repackage and repush the application:
+Repackage and repush the application (please login as the NON-ADMIN user you created in the previous lab):
 +
 [source,bash]
 ----
@@ -224,7 +224,7 @@ memory_heuristics:
 +
 [source,bash]
 ----
-$ bundle exec rake clean package
+$ bundle exec rake clean package OFFLINE=true
 ----
 
 . Update your admin buildpack:
@@ -236,7 +236,7 @@ Updating buildpack java-staging-ts...
 OK
 ----
 
-. Repush your application, watching the JRE version change:
+. Repush your application (again, login as the NON-ADMIN user you created in the previous lab), watching the JRE version change:
 +
 [source,bash]
 ----
