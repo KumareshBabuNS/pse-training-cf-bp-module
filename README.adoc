@@ -122,7 +122,7 @@ OPTIONS:
    --disable    Disable the buildpack
 ----
 +
-Add your buildpack to your CF instance like this:
+Add your buildpack to your CF instance like this (give your buildpack a unique name by appending some suffix like your initials):
 +
 [source,bash]
 ----
@@ -161,7 +161,7 @@ Repackage and repush the application:
 [source,bash]
 ----
 $ gradle assemble
-$ cf push
+$ cf push -b <the name you gave your buildpack>
 ----
 
 . Now let's check the staging info provided by the Java buildpack to see that our change was effective:
