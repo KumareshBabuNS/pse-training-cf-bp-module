@@ -90,7 +90,8 @@ Creating build/java-buildpack-158e5a6.zip
 +
 [source,bash]
 ----
-$ cf api                                                                                                                                                         API endpoint: https://api.cf.deepsouthcloud.com (API version: 2.2.0)
+$ cf api 
+API endpoint: https://api.cf.deepsouthcloud.com (API version: 2.2.0)
 
 $ cf login
 API endpoint: https://api.cf.deepsouthcloud.com
