@@ -5,7 +5,7 @@ Matt Stine <mstine@gopivotal.com>
 
 * http://git-scm.com/downloads[Git]
 * A Ruby version manager: http://rvm.io/[RVM] or https://github.com/sstephenson/rbenv[Rbenv]
-* The ``Hello World'' cities app you created earlier
+* The https://github.com/cf-platform-eng/spring-boot-cities[``Hello World''] cities app you created earlier
 
 == Intro
 
